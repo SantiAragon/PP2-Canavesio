@@ -3,17 +3,25 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <div class="register-container">
+        <div class="register-form-wrapper">
+            <h1 class="register-h1">Register</h1>
 
-    {{ form_errors(registrationForm) }}
+            {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+            {{ form_start(registrationForm) }}
+                {{ form_row(registrationForm.email, {'attr': {'class': 'register-input'}}) }}
+                {{ form_row(registrationForm.plainPassword, {
+                    'label': 'Password',
+                    'attr': {'class': 'register-input'}
+                }) }}
+                <div class="register-checkbox-wrapper">
+                    {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'register-input'}}) }}
+                    <label class="register-checkbox-label">{{ form_label(registrationForm.agreeTerms) }}</label>
+                </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                <button type="submit" class="register-button">Register</button>
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
 {% endblock %}
