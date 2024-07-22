@@ -20,8 +20,10 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
+                default_target_path: app_home_page  # Redirige al controlador HomePage después del login
             logout:
                 path: app_logout
+                target: app_login  # Redirige a la página de login después del logout
                 # where to redirect after logout
                 # target: app_any_route
             
