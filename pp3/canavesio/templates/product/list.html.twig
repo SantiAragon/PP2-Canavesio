@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista de Productos{% endblock %}
+
+{% block body %}
+    <h1>Lista de Productos</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Descripción</th>
+                <th>Marca</th>
+                <th>Imagen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>{{ product.brand }}</td>
+                    <td>
+                        {% if product.image %}
+                            <img src="data:image/jpeg;base64,{{ product.image }}" alt="Product Image" style="max-width: 100px; max-height: 100px;">
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('new_product') }}">Agregar nuevo producto</a>
+{% endblock %}
