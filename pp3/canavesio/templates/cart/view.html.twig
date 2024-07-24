@@ -1,0 +1,23 @@
+{# templates/cart/view.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Your Cart{% endblock %}
+
+{% block body %}
+<h1>Your Cart</h1>
+
+{% if cart and cart.cartProductOrders|length > 0 %}
+    <ul>
+        {% for cartProductOrder in cart.cartProductOrders %}
+            <li>
+                {{ cartProductOrder.product.name }} - Quantity: {{ cartProductOrder.quantity }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Your cart is empty.</p>
+{% endif %}
+
+<a href="{{ path('product_list') }}">Continue Shopping</a>
+{% endblock %}
+
