@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Repository;
 
 use App\Entity\UserFavoriteProduct;
@@ -7,7 +6,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<UserFavoriteProduct>
+ * @method UserFavoriteProduct|null find($id, $lockMode = null, $lockVersion = null)
+ * @method UserFavoriteProduct|null findOneBy(array $criteria, array $orderBy = null)
+ * @method UserFavoriteProduct[]    findAll()
+ * @method UserFavoriteProduct[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class UserFavoriteProductRepository extends ServiceEntityRepository
 {
@@ -15,7 +17,7 @@ class UserFavoriteProductRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, UserFavoriteProduct::class);
     }
-
+    
     //    /**
     //     * @return UserFavoriteProduct[] Returns an array of UserFavoriteProduct objects
     //     */

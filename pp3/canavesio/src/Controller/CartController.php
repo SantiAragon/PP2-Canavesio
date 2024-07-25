@@ -5,8 +5,8 @@ use App\Entity\Cart;
 use App\Entity\CartProductOrder;
 use App\Entity\Product;
 use App\Repository\CartRepository;
-use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,12 +28,18 @@ class CartController extends AbstractController
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-
+    
         $product = $productRepository->find($productId);
         if (!$product) {
             return $this->redirectToRoute('product_list');
         }
-
+    
+        $quantity = (int) $request->request->get('quantity');
+        if ($quantity < 1 || $quantity > $product->getQuantity()) {
+            // Handle invalid quantity (optional: add an error message or redirect)
+            return $this->redirectToRoute('product_list');
+        }
+    
         // Find or create a cart for the user
         $cart = $cartRepository->findOneBy(['user' => $user]);
         if (!$cart) {
@@ -42,29 +48,33 @@ class CartController extends AbstractController
             $entityManager->persist($cart);
             $entityManager->flush();
         }
-
+    
         // Check if product is already in the cart
         $cartProductOrder = $cart->getCartProductOrders()->filter(function ($cartProductOrder) use ($product) {
             return $cartProductOrder->getProduct() === $product;
         })->first();
-
+    
         if ($cartProductOrder) {
             // Increment quantity if product is already in the cart
-            $cartProductOrder->setQuantity($cartProductOrder->getQuantity() + 1);
+            $cartProductOrder->setQuantity($cartProductOrder->getQuantity() + $quantity);
         } else {
             // Add new product to the cart
             $cartProductOrder = new CartProductOrder();
             $cartProductOrder->setProduct($product);
             $cartProductOrder->setCart($cart);
-            $cartProductOrder->setQuantity(1);
+            $cartProductOrder->setQuantity($quantity);
             $cartProductOrder->setDate(new \DateTime());
             $cartProductOrder->setTime(new \DateTime());
-
+    
             $entityManager->persist($cartProductOrder);
         }
-
+    
+        // Update the stock quantity
+        $product->setQuantity($product->getQuantity() - $quantity);
+        $entityManager->persist($product);
+    
         $entityManager->flush();
-
+    
         return $this->redirectToRoute('cart_view');
     }
 
@@ -80,5 +90,55 @@ class CartController extends AbstractController
         return $this->render('cart/view.html.twig', [
             'cart' => $cart,
         ]);
+    }
+
+    #[Route('/cart/remove/{id}', name: 'cart_remove_product', methods: ['POST'])]
+    public function removeProduct(
+        int $id,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        Security $security
+    ): Response {
+        $user = $security->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $cartProductOrder = $entityManager->getRepository(CartProductOrder::class)->find($id);
+
+        if (!$cartProductOrder) {
+            throw $this->createNotFoundException('Cart product order not found');
+        }
+
+        $cart = $cartProductOrder->getCart();
+        if ($cart->getUser() !== $user) {
+            throw $this->createAccessDeniedException('You do not have permission to remove this item from the cart.');
+        }
+
+        $quantityToRemove = (int) $request->request->get('quantity', 0);
+
+        if ($quantityToRemove > 0 && $quantityToRemove <= $cartProductOrder->getQuantity()) {
+            $currentQuantity = $cartProductOrder->getQuantity();
+            $newQuantity = $currentQuantity - $quantityToRemove;
+
+            if ($newQuantity > 0) {
+                $cartProductOrder->setQuantity($newQuantity);
+            } else {
+                // Remove CartProductOrder if quantity becomes 0 or less
+                $cart->removeCartProductOrder($cartProductOrder);
+                $entityManager->remove($cartProductOrder);
+            }
+
+            // Update the stock quantity of the product
+            $product = $cartProductOrder->getProduct();
+            if ($product) {
+                $product->setQuantity($product->getQuantity() + $quantityToRemove);
+                $entityManager->persist($product);
+            }
+
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('cart_view');
     }
 }
