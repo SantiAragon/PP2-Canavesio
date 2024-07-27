@@ -25,6 +25,11 @@ class UserFavoriteProduct
     #[ORM\JoinColumn(nullable: false)]
     private ?Product $product = null;
 
+    #[ORM\ManyToOne(inversedBy: 'userFavoriteProduct')]
+    private ?Machine $machine = null;
+
+    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -65,4 +70,18 @@ class UserFavoriteProduct
 
         return $this;
     }
+
+    public function getMachine(): ?Machine
+    {
+        return $this->machine;
+    }
+
+    public function setMachine(?Machine $machine): static
+    {
+        $this->machine = $machine;
+
+        return $this;
+    }
+
+   
 }

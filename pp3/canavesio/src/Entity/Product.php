@@ -48,12 +48,26 @@ class Product
     #[ORM\Column(type: Types::TEXT)]
     private ?string $image = null;
 
+    /**
+     * @var Collection<int, Parts>
+     */
+    #[ORM\ManyToMany(targetEntity: Parts::class, mappedBy: 'product')]
+    private Collection $parts;
+
+    /**
+     * @var Collection<int, ProductPartsMachine>
+     */
+    #[ORM\OneToMany(targetEntity: ProductPartsMachine::class, mappedBy: 'product')]
+    private Collection $productPartsMachines;
+
     
 
     public function __construct()
     {
         $this->userFavoriteProduct = new ArrayCollection();
         $this->cartProductOrder = new ArrayCollection();
+        $this->parts = new ArrayCollection();
+        $this->productPartsMachines = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,6 +205,63 @@ class Product
     public function setImage(string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Parts>
+     */
+    public function getParts(): Collection
+    {
+        return $this->parts;
+    }
+
+    public function addPart(Parts $part): static
+    {
+        if (!$this->parts->contains($part)) {
+            $this->parts->add($part);
+            $part->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removePart(Parts $part): static
+    {
+        if ($this->parts->removeElement($part)) {
+            $part->removeProduct($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductPartsMachine>
+     */
+    public function getProductPartsMachines(): Collection
+    {
+        return $this->productPartsMachines;
+    }
+
+    public function addProductPartsMachine(ProductPartsMachine $productPartsMachine): static
+    {
+        if (!$this->productPartsMachines->contains($productPartsMachine)) {
+            $this->productPartsMachines->add($productPartsMachine);
+            $productPartsMachine->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductPartsMachine(ProductPartsMachine $productPartsMachine): static
+    {
+        if ($this->productPartsMachines->removeElement($productPartsMachine)) {
+            // set the owning side to null (unless already changed)
+            if ($productPartsMachine->getProduct() === $this) {
+                $productPartsMachine->setProduct(null);
+            }
+        }
 
         return $this;
     }
