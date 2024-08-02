@@ -60,6 +60,12 @@ class Product
     #[ORM\OneToMany(targetEntity: ProductPartsMachine::class, mappedBy: 'product')]
     private Collection $productPartsMachines;
 
+    /**
+     * @var Collection<int, RecipeMachine>
+     */
+    #[ORM\ManyToMany(targetEntity: RecipeMachine::class, mappedBy: 'products')]
+    private Collection $recipeMachines;
+
     
 
     public function __construct()
@@ -68,6 +74,7 @@ class Product
         $this->cartProductOrder = new ArrayCollection();
         $this->parts = new ArrayCollection();
         $this->productPartsMachines = new ArrayCollection();
+        $this->recipeMachines = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -261,6 +268,33 @@ class Product
             if ($productPartsMachine->getProduct() === $this) {
                 $productPartsMachine->setProduct(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RecipeMachine>
+     */
+    public function getRecipeMachines(): Collection
+    {
+        return $this->recipeMachines;
+    }
+
+    public function addRecipeMachine(RecipeMachine $recipeMachine): static
+    {
+        if (!$this->recipeMachines->contains($recipeMachine)) {
+            $this->recipeMachines->add($recipeMachine);
+            $recipeMachine->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeMachine(RecipeMachine $recipeMachine): static
+    {
+        if ($this->recipeMachines->removeElement($recipeMachine)) {
+            $recipeMachine->removeProduct($this);
         }
 
         return $this;

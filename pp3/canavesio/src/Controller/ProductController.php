@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class ProductController extends AbstractController
 {
     #[Route('/product/new', name: 'new_product')]
@@ -48,4 +49,9 @@ class ProductController extends AbstractController
             'products' => $products,
         ]);
     }
+
+
+
+
+
 }

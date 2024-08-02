@@ -78,4 +78,26 @@ class ProductPartsMachine
 
         return $this;
     }
+
+    public function canCreateProduct(Product $product): bool
+    {
+        foreach ($product->getParts() as $part) {
+            if ($part->getQuantity() <= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function canCreateMachine(Machine $machine): bool
+    {
+        foreach ($machine->getProductPartsMachine() as $ppm) {
+            if ($ppm->getParts()->getQuantity() <= 0 || $ppm->getProduct()->getQuantity() <= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 }

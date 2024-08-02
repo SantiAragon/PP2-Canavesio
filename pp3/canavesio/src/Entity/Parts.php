@@ -33,10 +33,27 @@ class Parts
     #[ORM\OneToMany(targetEntity: ProductPartsMachine::class, mappedBy: 'parts')]
     private Collection $productPartsMachines;
 
+    #[ORM\Column(length: 255)]
+    private ?string $brand = null;
+
+    /**
+     * @var Collection<int, RecipeMachine>
+     */
+    #[ORM\ManyToMany(targetEntity: RecipeMachine::class, mappedBy: 'parts')]
+    private Collection $recipeMachines;
+
+    /**
+     * @var Collection<int, RecipeProduct>
+     */
+    #[ORM\ManyToMany(targetEntity: RecipeProduct::class, mappedBy: 'parts')]
+    private Collection $recipeProducts;
+
     public function __construct()
     {
         $this->product = new ArrayCollection();
         $this->productPartsMachines = new ArrayCollection();
+        $this->recipeMachines = new ArrayCollection();
+        $this->recipeProducts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -117,6 +134,72 @@ class Parts
             if ($productPartsMachine->getParts() === $this) {
                 $productPartsMachine->setParts(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getBrand(): ?string
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(string $brand): static
+    {
+        $this->brand = $brand;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RecipeMachine>
+     */
+    public function getRecipeMachines(): Collection
+    {
+        return $this->recipeMachines;
+    }
+
+    public function addRecipeMachine(RecipeMachine $recipeMachine): static
+    {
+        if (!$this->recipeMachines->contains($recipeMachine)) {
+            $this->recipeMachines->add($recipeMachine);
+            $recipeMachine->addPart($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeMachine(RecipeMachine $recipeMachine): static
+    {
+        if ($this->recipeMachines->removeElement($recipeMachine)) {
+            $recipeMachine->removePart($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RecipeProduct>
+     */
+    public function getRecipeProducts(): Collection
+    {
+        return $this->recipeProducts;
+    }
+
+    public function addRecipeProduct(RecipeProduct $recipeProduct): static
+    {
+        if (!$this->recipeProducts->contains($recipeProduct)) {
+            $this->recipeProducts->add($recipeProduct);
+            $recipeProduct->addPart($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeProduct(RecipeProduct $recipeProduct): static
+    {
+        if ($this->recipeProducts->removeElement($recipeProduct)) {
+            $recipeProduct->removePart($this);
         }
 
         return $this;
