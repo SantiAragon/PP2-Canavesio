@@ -1,0 +1,38 @@
+{# templates/payment.html.twig #}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proceso de Pago</title>
+</head>
+<body>
+    <h1>Proceso de Pago</h1>
+
+    {# Añadir el SDK de Mercado Pago #}
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+    {# Contenedor para el botón de pago #}
+    <div id="wallet_container"></div>
+
+    <script>
+        // Configurar Mercado Pago con tu clave pública
+        const mp = new MercadoPago('APP_USR-df884e88-c65a-40ff-84bc-3da637e8bc56', {
+            locale: 'es-AR' // Opcional, puedes cambiar el idioma si es necesario
+        });
+
+        // Inicializar el checkout con la preferencia creada
+        mp.bricks().create("wallet", "wallet_container", {
+            initialization: {
+                preferenceId: "{{ preferenceId }}" // Utilizando el ID de la preferencia
+            },
+            customization: {
+                texts: {
+                    valueProp: 'smart_option',
+                },
+            },
+        });
+    </script>
+
+</body>
+</html>
