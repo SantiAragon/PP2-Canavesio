@@ -38,9 +38,14 @@
                             </div>
                             <button type="submit" class="btn btn-primary">Agregar al carrito</button>
                         </form>
-                        <form action="{{ path('add_favorite', {productId: product.id}) }}" method="post" style="display: inline;">
-                            <button type="submit" class="btn btn-secondary">Agregar a Favoritos</button>
-                        </form>
+                        
+                        {% if product.id not in favoriteProductIds %}
+                            <form action="{{ path('add_favorite', {productId: product.id}) }}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-secondary">Agregar a Favoritos</button>
+                            </form>
+                        {% else %}
+                            <button type="button" class="btn btn-warning" disabled>Este producto ya se encuentra en Favoritos</button>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

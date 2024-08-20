@@ -5,6 +5,15 @@
 {% block body %}
     <h1>Mis Favoritos</h1>
 
+    {# Mostrar mensajes flash #}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
     <table class="table">
         <thead>
             <tr>

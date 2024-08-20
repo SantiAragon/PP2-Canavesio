@@ -3,12 +3,12 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Repository\UserFavoriteProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 
 class ProductController extends AbstractController
 {
@@ -41,17 +41,22 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product', name: 'product_list')]
-    public function list(EntityManagerInterface $entityManager): Response
-    {
+    public function list(
+        EntityManagerInterface $entityManager,
+        UserFavoriteProductRepository $userFavoriteProductRepository
+    ): Response {
+        $user = $this->getUser();
         $products = $entityManager->getRepository(Product::class)->findAll();
+
+        // Obtener IDs de productos favoritos del usuario actual
+        $favoriteProductIds = $userFavoriteProductRepository->findBy(['user' => $user]);
+        $favoriteProductIds = array_map(function ($favorite) {
+            return $favorite->getProduct()->getId();
+        }, $favoriteProductIds);
 
         return $this->render('product/list.html.twig', [
             'products' => $products,
+            'favoriteProductIds' => $favoriteProductIds,
         ]);
     }
-
-
-
-
-
 }

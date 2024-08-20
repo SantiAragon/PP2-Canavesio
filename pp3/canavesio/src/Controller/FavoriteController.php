@@ -31,6 +31,17 @@ class FavoriteController extends AbstractController
             return $this->redirectToRoute('product_list');
         }
 
+        // Verificar si el producto ya está en favoritos
+        $existingFavorite = $userFavoriteProductRepository->findOneBy([
+            'user' => $user,
+            'product' => $product,
+        ]);
+
+        if ($existingFavorite) {
+            $this->addFlash('warning', 'Este producto ya se encuentra en favoritos.');
+            return $this->redirectToRoute('product_list');
+        }
+
         $favorite = new Favorite();
         $favorite->setFlag(true);
 
@@ -43,6 +54,7 @@ class FavoriteController extends AbstractController
         $entityManager->persist($userFavoriteProduct);
         $entityManager->flush();
 
+        $this->addFlash('success', 'Producto agregado a favoritos.');
         return $this->redirectToRoute('product_list');
     }
 
@@ -55,8 +67,14 @@ class FavoriteController extends AbstractController
 
         $favorites = $userFavoriteProductRepository->findBy(['user' => $user]);
 
+        // Obtener los IDs de los productos que ya están en favoritos
+        $favoriteProductIds = array_map(function($favorite) {
+            return $favorite->getProduct()->getId();
+        }, $favorites);
+
         return $this->render('favorite/list.html.twig', [
             'favorites' => $favorites,
+            'favoriteProductIds' => $favoriteProductIds, // Pasar los IDs a la plantilla
         ]);
     }
 
