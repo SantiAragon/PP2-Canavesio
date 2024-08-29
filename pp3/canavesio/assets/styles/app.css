@@ -1,18 +1,22 @@
+/* Estilos globales */
 body {
-    background-color: skyblue;
+    background-image: linear-gradient(to top, grey 0%, white 100%);
+    background-size: cover; /* Ajusta el tamaño del fondo para cubrir todo el área visible */
+    background-attachment: fixed; /* Opcional: mantiene el fondo fijo mientras se desplaza el contenido */
+    font-family: "Krub", sans-serif;
 }
 
-/* login */
-.container {
+
+/* Estilos para contenedores y formularios de login */
+.container, .register-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     background-color: #f8f9fa;
-    font-family: Arial, Helvetica, sans-serif;
 }
 
-.form-wrapper {
+.form-wrapper, .register-form-wrapper {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -21,127 +25,39 @@ body {
     max-width: 400px;
 }
 
-.alert {
+.alert, .register-alert {
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid transparent;
     border-radius: 4px;
 }
 
-.alert-danger {
+.alert-danger, .register-alert-danger {
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
 }
 
-.mb-3 {
+.mb-3, .register-mb-3 {
     margin-bottom: 1rem;
 }
 
-.h3 {
+.h3, .register-h3, .register-h1 {
     font-size: 1.75rem;
 }
 
-.font-weight-normal {
+.font-weight-normal, .register-font-weight-normal {
     font-weight: 400;
 }
 
-label {
+label, .register-label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
 }
 
 input[type="email"],
-input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-}
-
-input[type="email"]:focus,
-input[type="password"]:focus {
-    border-color: #80bdff;
-    outline: none;
-}
-
-button[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-button[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* registro */
-
-.register-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #e9ecef;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.register-form-wrapper {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-}
-
-.register-alert {
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-}
-
-.register-alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-
-.register-mb-3 {
-    margin-bottom: 1rem;
-}
-
-.register-h3, .register-h1 {
-    font-size: 1.75rem;
-}
-
-.register-font-weight-normal {
-    font-weight: 400;
-}
-
-.register-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
+input[type="password"],
 .register-input[type="email"],
 .register-input[type="password"],
 .register-input[type="text"] {
@@ -152,6 +68,8 @@ a:hover {
     border-radius: 4px;
 }
 
+input[type="email"]:focus,
+input[type="password"]:focus,
 .register-input[type="email"]:focus,
 .register-input[type="password"]:focus,
 .register-input[type="text"]:focus {
@@ -159,36 +77,199 @@ a:hover {
     outline: none;
 }
 
-.register-checkbox-wrapper {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.register-checkbox-label {
-    margin-left: 10px;
-}
-
+button[type="submit"],
 .register-button[type="submit"] {
     width: 100%;
     padding: 10px;
     border: none;
     border-radius: 4px;
-    background-color: #28a745;
+    background-color: #007bff;
     color: #fff;
     font-size: 16px;
     cursor: pointer;
 }
 
+button[type="submit"]:hover,
 .register-button[type="submit"]:hover {
-    background-color: #218838;
+    background-color: #0056b3;
 }
 
-.register-link {
+a, .register-link {
     color: #007bff;
     text-decoration: none;
 }
 
-.register-link:hover {
+a:hover, .register-link:hover {
     text-decoration: underline;
+}
+
+/* Estilos adicionales para la página principal */
+.example-wrapper {
+    margin: 2em auto;
+    max-width: 800px;
+    width: 95%;
+    font: 18px/1.5 'Roboto', sans-serif;
+    color: #333;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+.example-wrapper h1 {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.example-wrapper ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.example-wrapper P {
+   text-align: center;
+}
+
+.example-wrapper li {
+    margin-bottom: 10px;
+}
+
+.example-wrapper a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.example-wrapper a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.navegacion_barra {
+    display: flex;
+    justify-content: center; /* Centra el logo inicialmente */
+    align-items: center;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.navegacion_barra.scrolled {
+    justify-content: flex-start; /* Mueve el logo a la izquierda al hacer scroll */
+    padding: 0.5rem 2rem; /* Ajusta el padding si es necesario */
+}
+
+.imagen_logo {
+    width: 60%; /* Ajusta el tamaño del logo según sea necesario */
+    margin-right: 1rem;
+}
+/* Estilos para los botones */
+.btn {
+    display: inline-block;
+    padding: 1rem;
+    margin-top: 10px;
+    border-radius: 5px;
+    background-color: rgb(247, 164, 10); /* Color de fondo azul */
+    color: #ffffff !important; /* Color de texto blanco y uso de !important para asegurar su aplicación */
+    text-align: center; /* Centrar texto dentro del botón */
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold; /* Asegura que el texto sea visible y destacado */
+    cursor: pointer;
+    border: none; /* Remueve bordes para un diseño más limpio */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: rgb(182, 125, 18); /* Color de fondo más oscuro en hover */
+    color: black !important; /* Asegura que el texto siga siendo blanco */
+    text-decoration: none;
+}
+
+a.btn {
+    color: #ffffff !important; /* Asegura que los enlaces con clase .btn tengan texto blanco */
+    display: inline-block;
+}
+
+.section-buttons {
+    background-color: rgb(247, 164, 10);
+}
+
+
+.navegacion {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: auto; /* Mueve la barra de navegación a la derecha del logo */
+    justify-content: space-between;
+}
+
+.navegacion a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 1rem;
+}
+
+.imagen {
+    background-image: url(../../assets/imagenes/canavesiofoto2.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center; /* o 'top', 'bottom', 'left', 'right' */
+    height: 640px;
+    width: 100%;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.contenido-imagen {
+    position: absolute;
+    background-color: rgba( 0,0,0, .7); /**anterior**/
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.contenido-imagen h2,
+.contenido-imagen p {
+    color: white;
+}
+
+.contenido-imagen .ubicacion {
+    display: flex;
+    align-items: flex-end;
+}
+
+.boton {
+    background-color:  rgb(214, 113, 19);
+    color: white;
+    padding: .5rem 2rem;
+    margin-top: 3rem;
+    font-size: 1.5rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: .5rem;
+    width: auto;
+    text-align: center;
+    border: none;
+    transition: background-color 1s, color 1s;
+    
+}
+
+.boton:hover {
+    cursor: pointer;
+    background-color: rgb(175, 99, 11);
+    color: yellow;
+    text-decoration: none;
 }

@@ -2,42 +2,35 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomePageController!{% endblock %}
+{% block title %}Bienvenido a la Página Principal{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="navegacion_barra">
+<img class="imagen_logo" src="{{ asset('images/66cf4982a8246.png') }}" alt="Logo canavesio" width="400px">
+</div>
+    <div class="section-buttons">
+        <nav class="navegacion">
+            <a href="{{ path('product_list') }}" class="btn">Ir al Catálogo</a>
+            <a href="{{ path('cart_view') }}" class="btn">Ir al Carrito</a>
+            <a href="{{ path('favorite_list') }}" class="btn">Ir a Favoritos</a>
+            <a href="{{ path('app_add_used_machinery_page') }}" class="btn">Agregar Maquinaria Usada</a>
+            <a href="{{ path('app_view_used_machinery') }}" class="btn">Ver Maquinarias Usadas</a>
+            {# <a href="{{ path('admin_view_used_machinery') }}" class="btn">Vista Admin de Maquinarias Usadas</a> #}
+        </nav>
+    </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/laragon/www/pp3/canavesio/src/Controller/HomePageController.php</code></li>
-        <li>Your template at <code>C:/laragon/www/pp3/canavesio/templates/home_page/index.html.twig</code></li>
-    </ul>
-    <p>
-        <a href="{{ path('product_list') }}">Go to Catalog</a>
-    </p>
-    <p>
-        <a href="{{ path('cart_view') }}">Go to Cart</a>
-    </p>
-    <p>
-        <a href="{{ path('favorite_list') }}">Go to Favorites</a>
-    </p>
-
-    <section id="add-used-machinery-button">
-        <a href="{{ path('app_add_used_machinery_page') }}" class="btn btn-primary">Go to Add Used Machinery</a>
-    </section>
-
-    <section id="view-used-machineries-button">
-        <a href="{{ path('app_view_used_machinery') }}" class="btn btn-primary">View Used Machineries</a>
-    </section>
-
-    <section id="admin-view-used-machineries-button">
-        <a href="{{ path('admin_view_used_machinery') }}" class="btn btn-primary">Admin View Used Machineries</a>
-    </section>
-</div> 
+    <section class="imagen">
+            <div class="contenido-imagen">
+                <h2>CANAVESIO HNOS <span>s.r.l</span> </h2>
+                <div class="ubicacion">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-pin" width="80" height="80" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffc107" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                        <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
+                    </svg>  
+                    <p>por ahi</p>
+                </div> 
+            <a  class="boton">Contactar</a>
+            </div>
+        </section>
 {% endblock %}
