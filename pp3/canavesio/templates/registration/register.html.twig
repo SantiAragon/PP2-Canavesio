@@ -1,27 +1,65 @@
 {% extends 'base.html.twig' %}
-
+{% block stylesheets %}<link href="{{ asset('styles/register.css') }}" rel="stylesheet">{% endblock %}
 {% block title %}Register{% endblock %}
 
 {% block body %}
+    
     <div class="register-container">
+        <div class="imagenbienvenida aos-init" data-aos="fade-left" data-aos-duration="1000"></div>
         <div class="register-form-wrapper">
-            <h1 class="register-h1">Register</h1>
+            <h1 class="register-h1">Crea tu cuenta</h1>
 
             {{ form_errors(registrationForm) }}
 
             {{ form_start(registrationForm) }}
-                {{ form_row(registrationForm.email, {'attr': {'class': 'register-input'}}) }}
-                {{ form_row(registrationForm.plainPassword, {
-                    'label': 'Password',
-                    'attr': {'class': 'register-input'}
-                }) }}
-                <div class="register-checkbox-wrapper">
-                    {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'register-input'}}) }}
-                    <label class="register-checkbox-label">{{ form_label(registrationForm.agreeTerms) }}</label>
+                <div class="register-field">
+                    {{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'register-label'}}) }}
+                    {{ form_widget(registrationForm.email, {
+                        'attr': {
+                            'class': 'register-input',
+                            'placeholder': 'Email'
+                        }
+                    }) }}
+                </div>
+                
+                <div class="register-field">
+                    {{ form_label(registrationForm.plainPassword, 'Contraseña', {'label_attr': {'class': 'register-label'}}) }}
+                    {{ form_widget(registrationForm.plainPassword, {
+                        'attr': {
+                            'class': 'register-input',
+                            'placeholder': 'Contraseña'
+                        }
+                    }) }}
                 </div>
 
-                <button type="submit" class="register-button">Register</button>
+                <div class="register-checkbox-wrapper">
+                    {{ form_widget(registrationForm.agreeTerms, {
+                        'attr': {
+                            'class': 'register-checkbox'
+                        }
+                    }) }}
+                    <label class="register-checkbox-label">
+                        {{ form_label(registrationForm.agreeTerms) }}
+                        <span class="register-checkbox-text">Acepto los terminos y condiciones</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="register-button">Registrarse</button>
             {{ form_end(registrationForm) }}
+
+            <p class="register-login-prompt">¿Ya tenes una cuenta? <a href="{{ path('app_login') }}" class="register-login-link">Ingresa</a></p>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    AOS.init({
+        duration: 1000,
+        once: true,
+        easing: 'ease-out-cubic'
+    });
+});
+</script>
 {% endblock %}

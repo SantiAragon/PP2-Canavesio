@@ -11,13 +11,58 @@ body {
     font-size: 16px;
 }
 
-.navegacion_barra {
-    display: flex;
-    justify-content: center; /* Centra el logo inicialmente */
-    align-items: center;
-    padding: 1rem;
+.header-scroll {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #000;
+    color: #fff;
+    padding: 10px 0;
+    z-index: 1000;
+    display: none;
     transition: all 0.3s ease;
 }
+.header-scroll.visible {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header-scroll .logo {
+    max-height: 40px;
+    margin-left: 20px;
+}
+.header-scroll .nav-links {
+    display: flex;
+}
+.header-scroll .nav-links a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.section-buttons {
+    transition: opacity 0.3s ease;
+}
+.section-buttons.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.navegacion_barra {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    transition: opacity 0.3s ease;
+}
+
+.navegacion_barra.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
 
 .navegacion_barra.scrolled {
     justify-content: flex-start; /* Mueve el logo a la izquierda al hacer scroll */
@@ -25,14 +70,42 @@ body {
 }
 
 .imagen_logo {
-    width: 60%; /* Ajusta el tamaño del logo según sea necesario */
+    width: 60%;
     margin-right: 1rem;
+    transition: opacity 0.3s ease;
 }
 
 .section-buttons {
     background-color: rgb(247, 164, 10);
 }
 
+/* Estilos para los botones */
+.btn {
+    display: inline-block;
+    padding: 1rem;
+    margin-top: 10px;
+    border-radius: 5px;
+    background-color: rgb(247, 164, 10); /* Color de fondo azul */
+    color: #ffffff !important; /* Color de texto blanco y uso de !important para asegurar su aplicación */
+    text-align: center; /* Centrar texto dentro del botón */
+    text-decoration: none;
+    font-size: 2rem;
+    font-weight: bold; /* Asegura que el texto sea visible y destacado */
+    cursor: pointer;
+    border: none; /* Remueve bordes para un diseño más limpio */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: rgb(182, 125, 18); /* Color de fondo más oscuro en hover */
+    color: black !important; /* Asegura que el texto siga siendo blanco */
+    text-decoration: none;
+}
+
+a.btn {
+    color: #ffffff !important; /* Asegura que los enlaces con clase .btn tengan texto blanco */
+    display: inline-block;
+}
 
 .navegacion {
     display: flex;
@@ -50,8 +123,16 @@ body {
     padding: 1rem;
 }
 
+.navegacion a:hover{
+    color: white;
+    text-decoration: none;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 1rem;
+}
+
 .imagen {
-    background-image: url(../../assets/imagenes/canavesiofoto2.jpeg);
+    background-image: url('../../assets/imagenes/canavesiofoto2.jpeg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center; /* o 'top', 'bottom', 'left', 'right' */
@@ -63,7 +144,7 @@ body {
 
 .contenido-imagen {
     position: absolute;
-    background-color: rgba( 0,0,0, .7); /**anterior**/
+    background-color: rgba(0, 0, 0, 0.7); /**anterior**/
     width: 100%;
     height: 100%;
     display: flex;
@@ -83,7 +164,7 @@ body {
 }
 
 .boton {
-    background-color:  rgb(214, 113, 19);
+    background-color: rgb(214, 113, 19);
     color: white;
     padding: .5rem 2rem;
     margin-top: 3rem;
@@ -96,7 +177,6 @@ body {
     text-align: center;
     border: none;
     transition: background-color 1s, color 1s;
-    
 }
 
 .boton:hover {
@@ -108,55 +188,57 @@ body {
 
 .contenedor-contenido {
     display: flex;
-    flex-direction: column; /* Coloca cada sección .contenido en una nueva fila */
-    max-width: 120rem;
-    margin: 0 auto;
-    gap: 1rem; /* Espacio entre las secciones */
+    flex-direction: column;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 1rem;
 }
 
 .sombra {
-    box-shadow: 0px 5px 15px 0px rgba(112,112,112,0.48);
+    box-shadow: 0px 5px 15px 0px rgba(112, 112, 112, 0.48);
     background-color: white;
     padding: 2rem;
     border-radius: 1rem;
 }
 
-.contenido {
+
+.contenido, .contenido1 {
     display: flex;
-    justify-content: start; /* Centra el contenido horizontalmente */
     align-items: center;
-    gap: 3rem; /* Espacio entre el texto y la imagen */
-    width: 100%; /* Asegura que cada .contenido ocupe todo el ancho disponible */
-    margin-bottom: 2rem; /* Añade margen entre las secciones */
+    gap: 2rem;
 }
 
-.contenido1 {
+.contenido h2, .contenido1 h2 {
+    font-size: 2.4rem;
+    color: #000;
+}
+
+.alineado {
     display: flex;
-    justify-content: end; /* Centra el contenido horizontalmente */
+    flex-direction: column;
     align-items: center;
-    gap: 2rem; /* Espacio entre el texto y la imagen */
-    width: 100%; /* Asegura que cada .contenido ocupe todo el ancho disponible */
-    margin-bottom: 2rem; /* Añade margen entre las secciones */
+    text-align: center;
 }
 
-.contenido .alineado {
-    text-align: start;
-    line-height: 1.5; /* Ajusta la altura de línea para mejorar la lectura */
-    max-width: 300px;
-}
-
-.contenido1 .alineado {
-    text-align: end;
-    line-height: 1.5; /* Ajusta la altura de línea para mejorar la lectura */
-    max-width: 300px;
-}
-
-
-.contenido:nth-child(odd) {
-    flex-direction: row; /* Posición del texto a la izquierda y la imagen a la derecha */
+/* Animación de deslizamiento para imágenes */
+@keyframes slide-in {
+    0% {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 .imagen1 {
-    width: 400px;
-    margin: 0; /* Centra la imagen */
+        width: 50%;
+        height: auto;
+        border-radius: 1rem;
+    opacity: 0; /* Comienza invisible */
+    animation: slide-in 1s forwards; /* Aplica la animación de deslizamiento */
 }

@@ -14,3 +14,12 @@ cart_view:
     path: /cart
     controller: App\Controller\CartController::viewCart
 
+create-preference:
+    path: /crear-preferencia
+    controller: App\Controller\PaymentController::createPreference
+
+
+# registro:
+#     path: /registro
+#     controller: App\Controller\RegistrationController::register
+
