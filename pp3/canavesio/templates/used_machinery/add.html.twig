@@ -2,8 +2,10 @@
 
 {% block title %}Add Used Machinery{% endblock %}
 
+{% block stylesheets %}<link href="{{ asset('styles/add_machinery.css') }}" rel="stylesheet">{% endblock %}
+
 {% block body %}
-<h1>Add Used Machinery</h1>
+<h1>Nueva Maquinaria Usada</h1>
 
 {# Mensajes Flash #}
 {% for label, messages in app.session.flashbag.all() %}
@@ -15,30 +17,50 @@
 {% endfor %}
 
 <form method="post" action="{{ path('app_add_used_machinery') }}" enctype="multipart/form-data">
-    <label for="machinery_name">Machinery Name:</label>
-    <input type="text" id="machinery_name" name="machinery_name" required>
+    <div class="form-group-container">
+        <div class="form-group">
+            <label for="machinery_name">Nombre:</label>
+            <input type="text" id="machinery_name" name="machinery_name" required>
+        </div>
 
-    <label for="brand">Brand:</label>
-    <input type="text" id="brand" name="brand" required>
+        <div class="form-group">
+            <label for="brand">Marca:</label>
+            <input type="text" id="brand" name="brand" required>
+        </div>
 
-    <label for="years_old">Years Old:</label>
-    <input type="number" id="years_old" name="years_old" required min="0">
+        <div class="form-group">
+            <label for="years_old">Años:</label>
+            <input type="number" id="years_old" name="years_old" required min="0">
+        </div>
 
-    <label for="months">Months:</label>
-    <input type="number" id="months" name="months" required min="0" max="11">
+        <div class="form-group">
+            <label for="months">Meses:</label>
+            <input type="number" id="months" name="months" required min="0" max="11">
+        </div>
 
-    <label for="hours_of_use">Hours of Use:</label>
-    <input type="number" id="hours_of_use" name="hours_of_use" required min="0">
+        <div class="form-group">
+            <label for="hours_of_use">Horas de Uso:</label>
+            <input type="number" id="hours_of_use" name="hours_of_use" required min="0">
+        </div>
 
-    <label for="last_service">Last Service:</label>
-    <input type="date" id="last_service" name="last_service" required>
+        <div class="form-group">
+            <label for="last_service">Ultimo Servicio:</label>
+            <input type="date" id="last_service" name="last_service" required>
+        </div>
 
-    <label for="price">Price in USD:</label>
-    <input type="number" id="price" name="price" step="0.01" min="0">
+        <div class="form-group">
+            <label for="price">Precio en USD:</label>
+            <input type="number" id="price" name="price" step="0.01" min="0">
+        </div>
 
-    <label for="image">Image:</label>
-    <input type="file" id="image" name="image" accept="image/*" required>
+        <div class="form-group full-width">
+            <label for="image">Imagen:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+        </div>
 
-    <button type="submit">Add Machinery</button>
+        <div class="form-group full-width">
+            <button type="submit">Agregar</button>
+        </div>
+    </div>
 </form>
 {% endblock %}

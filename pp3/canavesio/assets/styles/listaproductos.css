@@ -116,3 +116,36 @@ body {
     font-size: 1.5rem;
 }
 
+.nuevas-maquinarias {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.seccion-titulo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.secciones-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.seccion {
+    width: 200px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.seccion img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.seccion h3 {
+    font-size: 18px;
+    font-weight: 600;
+}

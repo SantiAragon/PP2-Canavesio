@@ -1,9 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}<link href="{{ asset('styles/listaproductos.css') }}" rel="stylesheet">{% endblock %}
+{% block stylesheets %}
+<link href="{{ asset('styles/listaproductos.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block title %}Nuestros Productos{% endblock %}
 
 {% block body %}
+    <div class="nuevas-maquinarias">
+        <h2 class="seccion-titulo">Nuevas Maquinarias</h2>
+        <div class="secciones-grid">
+            <div class="seccion">
+                <img src="../../assets/imagenes/tractor_5090e_campo4_large_94dccff5e815fc6a0861f22279f8ae407d335310.jpg" alt="Maquinaria 1">
+                <h3>Tractores</h3>
+            </div>
+            <div class="seccion">
+                <img src="../../assets/imagenes/Embutidora-de-forraje-Canavesio-R-2800-Dual-wpv_900x450.jpg" alt="Maquinaria 2">
+                <h3>Embutidoras</h3>
+            </div>
+            <div class="seccion">
+                <img src="../../assets/imagenes/sembradora_1035_campo2_large_940a6b5a5172a72b45a3dff635ad9346fc558dae.jpg" alt="Maquinaria 3">
+                <h3>Sembradoras</h3>
+            </div>
+            <div class="seccion">
+                <img src="../../assets/imagenes/Picadora-John-Deere-8600-1.jpg" alt="Maquinaria 4">
+                <h3>Equipos de Forraje</h3>
+            </div>
+        </div>
+    </div>
+
     <h1 class="productos-titulo">Nuestros Productos</h1>
 
     <div class="productos-grid">
@@ -28,7 +53,6 @@
                     <form action="{{ path('create-preference') }}" method="get">
                         <button type="submit" class="btn">Ir al Pago</button>
                     </form>
-
 
                     {% if product.id not in favoriteProductIds %}
                         <form action="{{ path('add_favorite', {productId: product.id}) }}" method="post">
