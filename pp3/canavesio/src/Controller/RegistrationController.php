@@ -18,33 +18,34 @@ class RegistrationController extends AbstractController
     {
         return $this->render(view:'base.html.twig');
     }
-    
+
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+    $user = new User();
+    $form = $this->createForm(RegistrationFormType::class, $user);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Asignar ROLE_USER por defecto
+        $user->setRoles(['ROLE_USER']);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+        // Codificar contraseña
+        $user->setPassword(
+            $userPasswordHasher->hashPassword(
+                $user,
+                $form->get('plainPassword')->getData()
+            )
+        );
 
-            // do anything else you need here, like send an email
+        $entityManager->persist($user);
+        $entityManager->flush();
 
-            return $this->redirectToRoute(route:'app_login');
-        }
+        return $this->redirectToRoute('app_login');
+    }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
-        ]);
+    return $this->render('registration/register.html.twig', [
+        'registrationForm' => $form,
+    ]);
     }
 }
