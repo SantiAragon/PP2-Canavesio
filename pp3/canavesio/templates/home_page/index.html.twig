@@ -13,8 +13,13 @@
             <a href="{{ path('product_list') }}">Ir al Catálogo</a>
             <a href="{{ path('cart_view') }}">Ir al Carrito</a>
             <a href="{{ path('favorite_list') }}">Ir a Favoritos</a>
-            <a href="{{ path('app_add_used_machinery_page') }}">Agregar Maquinaria Usada</a>
+            {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_add_used_machinery_page') }}" class="btn">Agregar Maquinaria Usada</a>
+            {% endif %}
             <a href="{{ path('app_view_used_machinery') }}">Ver Maquinarias Usadas</a>
+            {% if is_granted('ROLE_GESTORSTOCK') or is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_view_used_machinery') }}" class="btn">Ver Stock</a>
+            {% endif %}
         </nav>
     </header>
 
@@ -27,8 +32,13 @@
             <a href="{{ path('product_list') }}" class="btn">Ir al Catálogo</a>
             <a href="{{ path('cart_view') }}" class="btn">Ir al Carrito</a>
             <a href="{{ path('favorite_list') }}" class="btn">Ir a Favoritos</a>
+            {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('app_add_used_machinery_page') }}" class="btn">Agregar Maquinaria Usada</a>
+            {% endif %}
             <a href="{{ path('app_view_used_machinery') }}" class="btn">Ver Maquinarias Usadas</a>
+            {% if is_granted('ROLE_GESTORSTOCK') or is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_view_used_machinery') }}" class="btn">Ver Stock</a>
+            {% endif %}
         </nav>
     </div>
 

@@ -8,64 +8,50 @@
 
 {% block body %}
     <div class="nuevas-maquinarias">
-        <h2 class="seccion-titulo">Nuevas Maquinarias</h2>
+        <div style="text-align: center;">
+            <h2 class="productos-titulo">Nuevas Maquinarias</h2>
+            </div>
         <div class="secciones-grid">
-            <div class="seccion">
-                <img src="../../assets/imagenes/tractor_5090e_campo4_large_94dccff5e815fc6a0861f22279f8ae407d335310.jpg" alt="Maquinaria 1">
-                <h3>Tractores</h3>
+            <div href="" class="seccion">
+                <a href=""> <img src="{{ asset('images/tractor_5090e_campo4_large_94dccff5e815fc6a0861f22279f8ae407d335310.jpg') }}" alt="Maquinaria 1"> </a>
+                <h3 class="image-text">Tractores</h3>
             </div>
             <div class="seccion">
-                <img src="../../assets/imagenes/Embutidora-de-forraje-Canavesio-R-2800-Dual-wpv_900x450.jpg" alt="Maquinaria 2">
-                <h3>Embutidoras</h3>
+                <a href=""><img src="{{ asset('images/Picadora-John-Deere-8600-1.jpg') }}" alt="Maquinaria 2"> </a>
+                <h3 class="image-text">Embutidoras</h3>
             </div>
             <div class="seccion">
-                <img src="../../assets/imagenes/sembradora_1035_campo2_large_940a6b5a5172a72b45a3dff635ad9346fc558dae.jpg" alt="Maquinaria 3">
-                <h3>Sembradoras</h3>
+                <a href=""><img src="{{ asset('images/sembradora_1035_campo2_large_940a6b5a5172a72b45a3dff635ad9346fc558dae.jpg') }}" alt="Maquinaria 3"> </a>
+                <h3 class="image-text">Sembradoras</h3>
             </div>
             <div class="seccion">
-                <img src="../../assets/imagenes/Picadora-John-Deere-8600-1.jpg" alt="Maquinaria 4">
-                <h3>Equipos de Forraje</h3>
+                <a href=""> <img src="{{ asset('images/Getreideernte_in_Sachsen_2H1A7879WI.jpg') }}" alt="Maquinaria 4"> </a>
+                <h3 class="image-text">Equipos de Forraje</h3>
             </div>
         </div>
     </div>
-
-    <h1 class="productos-titulo">Nuestros Productos</h1>
+    <div style="text-align: center;">
+        <h1 class="productos-titulo">Nuestros Productos</h1>
+    </div>
 
     <div class="productos-grid">
         {% for product in products %}
             <div class="producto-tarjeta">
-                <div class="producto-imagen">
-                    {% if product.image %}
-                        <img src="data:image/jpeg;base64,{{ product.image }}" alt="{{ product.name }}">
-                    {% endif %}
-                </div>
-                <div class="producto-info">
-                    <h2>{{ product.name }}</h2>
-                    <p>${{ product.price }}</p>
-                </div>
-                <div class="producto-acciones">
-                    <form action="{{ path('cart_add_product', {productId: product.id}) }}" method="post">
-                        <label for="quantity_{{ product.id }}">Cantidad:</label>
-                        <input type="number" id="quantity_{{ product.id }}" name="quantity" min="1" max="{{ product.quantity }}" value="1" required>
-                        <button type="submit" class="btn">Agregar al carrito</button>
-                    </form>
-
-                    <form action="{{ path('create-preference') }}" method="get">
-                        <button type="submit" class="btn">Ir al Pago</button>
-                    </form>
-
-                    {% if product.id not in favoriteProductIds %}
-                        <form action="{{ path('add_favorite', {productId: product.id}) }}" method="post">
-                            <button type="submit" class="btn">Agregar a Favoritos</button>
-                        </form>
-                    {% else %}
-                        <button class="btn btn-warning" disabled>En Favoritos</button>
-                    {% endif %}
-                </div>
+                <a href="{{ path('product_detail', {id: product.id}) }}" class="producto-link">
+                    <div class="producto-imagen">
+                        {% if product.image %}
+                            <img src="data:image/jpeg;base64,{{ product.image }}" alt="{{ product.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="producto-info">
+                        <h2>{{ product.name }}</h2>
+                        <p>${{ product.price }}</p>
+                    </div>
+                </a>
             </div>
         {% endfor %}
 
-        <div class="imagen-fondo imagen--maquina1"> </div>
-        <div class="imagen-fondo imagen--maquina2"> </div>
+        <div class="imagen-fondo imagen--maquina1"></div>
+        <div class="imagen-fondo imagen--maquina2"></div>
     </div>
 {% endblock %}
