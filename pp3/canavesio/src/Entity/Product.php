@@ -16,22 +16,49 @@ class Product
     #[ORM\Column]
     private ?int $id = null;
 
+    /**
+     * @Assert\NotBlank(message="El nombre es obligatorio")
+     */
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    /**
+     * @Assert\NotBlank(message="La cantidad es obligatoria")
+     * @Assert\GreaterThan(
+     *     value = 0,
+     *     message = "La cantidad debe ser mayor a 0"
+     * )
+     */
     #[ORM\Column(nullable: true)]
     private ?int $quantity = null;
 
+    /**
+     * @Assert\NotBlank(message="El precio es obligatorio")
+     * @Assert\GreaterThan(
+     *     value = 0,
+     *     message = "El precio debe ser mayor a 0"
+     * )
+     */
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $price = null;
 
+    /**
+     * @Assert\NotBlank(message="La descripción es obligatoria")
+     */
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
+    /**
+     * @Assert\NotBlank(message="La marca es obligatoria")
+     */
     #[ORM\Column(length: 255)]
     private ?string $brand = null;
 
-    
+    /**
+     * @Assert\NotBlank(message="La imagen es obligatoria")
+     */
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $image = null;
 
     /**
      * @var Collection<int, UserFavoriteProduct>
@@ -45,13 +72,10 @@ class Product
     #[ORM\OneToMany(targetEntity: CartProductOrder::class, mappedBy: 'product', orphanRemoval: true)]
     private Collection $cartProductOrder;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $image = null;
-
     /**
      * @var Collection<int, Parts>
      */
-    #[ORM\ManyToMany(targetEntity: Parts::class, mappedBy: 'product')]
+    #[ORM\ManyToMany(targetEntity: Parts::class, inversedBy: 'product')]
     private Collection $parts;
 
     /**
@@ -65,8 +89,6 @@ class Product
      */
     #[ORM\ManyToMany(targetEntity: RecipeMachine::class, mappedBy: 'products')]
     private Collection $recipeMachines;
-
-    
 
     public function __construct()
     {
@@ -142,8 +164,6 @@ class Product
         return $this;
     }
 
-    
-
     /**
      * @return Collection<int, UserFavoriteProduct>
      */
@@ -165,7 +185,6 @@ class Product
     public function removeUserFavoriteProduct(UserFavoriteProduct $userFavoriteProduct): static
     {
         if ($this->userFavoriteProduct->removeElement($userFavoriteProduct)) {
-            // set the owning side to null (unless already changed)
             if ($userFavoriteProduct->getProduct() === $this) {
                 $userFavoriteProduct->setProduct(null);
             }
@@ -195,7 +214,6 @@ class Product
     public function removeCartProductOrder(CartProductOrder $cartProductOrder): static
     {
         if ($this->cartProductOrder->removeElement($cartProductOrder)) {
-            // set the owning side to null (unless already changed)
             if ($cartProductOrder->getProduct() === $this) {
                 $cartProductOrder->setProduct(null);
             }
@@ -264,7 +282,6 @@ class Product
     public function removeProductPartsMachine(ProductPartsMachine $productPartsMachine): static
     {
         if ($this->productPartsMachines->removeElement($productPartsMachine)) {
-            // set the owning side to null (unless already changed)
             if ($productPartsMachine->getProduct() === $this) {
                 $productPartsMachine->setProduct(null);
             }
@@ -299,6 +316,4 @@ class Product
 
         return $this;
     }
-
-    
 }

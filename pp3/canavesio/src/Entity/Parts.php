@@ -24,13 +24,13 @@ class Parts
     /**
      * @var Collection<int, Product>
      */
-    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'parts')]
+    #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'parts')]
     private Collection $product;
 
     /**
      * @var Collection<int, ProductPartsMachine>
      */
-    #[ORM\OneToMany(targetEntity: ProductPartsMachine::class, mappedBy: 'parts')]
+    #[ORM\OneToMany(targetEntity: ProductPartsMachine::class, mappedBy: 'parts', orphanRemoval: true)]
     private Collection $productPartsMachines;
 
     #[ORM\Column(length: 255)]
@@ -130,7 +130,7 @@ class Parts
     public function removeProductPartsMachine(ProductPartsMachine $productPartsMachine): static
     {
         if ($this->productPartsMachines->removeElement($productPartsMachine)) {
-            // set the owning side to null (unless already changed)
+            // Verificar que la referencia se elimina adecuadamente
             if ($productPartsMachine->getParts() === $this) {
                 $productPartsMachine->setParts(null);
             }
@@ -163,15 +163,18 @@ class Parts
     {
         if (!$this->recipeMachines->contains($recipeMachine)) {
             $this->recipeMachines->add($recipeMachine);
+            // Sincronización inversa
             $recipeMachine->addPart($this);
         }
 
         return $this;
     }
 
+
     public function removeRecipeMachine(RecipeMachine $recipeMachine): static
     {
         if ($this->recipeMachines->removeElement($recipeMachine)) {
+            // Sincronización inversa
             $recipeMachine->removePart($this);
         }
 
@@ -190,18 +193,16 @@ class Parts
     {
         if (!$this->recipeProducts->contains($recipeProduct)) {
             $this->recipeProducts->add($recipeProduct);
-            $recipeProduct->addPart($this);
+            $recipeProduct->addPart($this.$recipeProduct);
         }
-
         return $this;
     }
 
     public function removeRecipeProduct(RecipeProduct $recipeProduct): static
     {
         if ($this->recipeProducts->removeElement($recipeProduct)) {
-            $recipeProduct->removePart($this);
+            $recipeProduct->removePart($this.$recipeProduct);
         }
-
         return $this;
     }
 }

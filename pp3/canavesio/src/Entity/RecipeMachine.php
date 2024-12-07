@@ -17,16 +17,22 @@ class RecipeMachine
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: 'json')]
-    private array $parts = [];
+    /**
+     * @var Collection<int, Parts>
+     */
+    #[ORM\ManyToMany(targetEntity: Parts::class, inversedBy: 'recipeMachines')]
+    private Collection $parts;
 
-    #[ORM\Column(type: 'json')]
-    private array $products = [];
+    /**
+     * @var Collection<int, Product>
+     */
+    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'recipeMachines')]
+    private Collection $products;
 
     public function __construct()
     {
-        $this->parts = [];
-        $this->products = [];
+        $this->parts = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -39,33 +45,63 @@ class RecipeMachine
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getParts(): array
+    /**
+     * @return Collection<int, Parts>
+     */
+    public function getParts(): Collection
     {
         return $this->parts;
     }
 
-    public function setParts(array $parts): self
+    public function addPart(Parts $part): static
     {
-        $this->parts = $parts;
+        if (!$this->parts->contains($part)) {
+            $this->parts->add($part);
+            $part->addRecipeMachine($this);
+        }
 
         return $this;
     }
 
-    public function getProducts(): array
+    public function removePart(Parts $part): static
+    {
+        if ($this->parts->removeElement($part)) {
+            $part->removeRecipeMachine($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
     {
         return $this->products;
     }
 
-    public function setProducts(array $products): self
+    public function addProduct(Product $product): static
     {
-        $this->products = $products;
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->addRecipeMachine($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): static
+    {
+        if ($this->products->removeElement($product)) {
+            $product->removeRecipeMachine($this);
+        }
 
         return $this;
     }

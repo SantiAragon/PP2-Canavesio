@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\Product;
@@ -92,31 +93,6 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/product/category/{category}', name: 'product_category')]
-    public function category(
-        string $category,
-        EntityManagerInterface $entityManager,
-        UserFavoriteProductRepository $userFavoriteProductRepository
-    ): Response {
-        $user = $this->getUser();
-        $products = $entityManager->getRepository(Product::class)->findBy(['category' => $category]);
-
-        // Obtener IDs de productos favoritos del usuario actual
-        $favoriteProductIds = [];
-        if ($user) {
-            $favorites = $userFavoriteProductRepository->findBy(['user' => $user]);
-            $favoriteProductIds = array_map(function ($favorite) {
-                return $favorite->getProduct()->getId();
-            }, $favorites);
-        }
-
-        return $this->render('product/list.html.twig', [
-            'products' => $products,
-            'favoriteProductIds' => $favoriteProductIds,
-            'category' => $category
-        ]);
-    }
-
     #[Route('/product/{id}/favorite', name: 'add_favorite', methods: ['POST'])]
     public function addToFavorites(
         int $id,
@@ -124,13 +100,13 @@ class ProductController extends AbstractController
         UserFavoriteProductRepository $userFavoriteProductRepository
     ): Response {
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
         $product = $entityManager->getRepository(Product::class)->find($id);
-        
+
         if (!$product) {
             throw $this->createNotFoundException('El producto no existe');
         }
@@ -145,7 +121,7 @@ class ProductController extends AbstractController
             $favorite = new UserFavoriteProduct();
             $favorite->setUser($user);
             $favorite->setProduct($product);
-            
+
             $entityManager->persist($favorite);
             $entityManager->flush();
 
@@ -163,13 +139,13 @@ class ProductController extends AbstractController
         UserFavoriteProductRepository $userFavoriteProductRepository
     ): Response {
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
         $product = $entityManager->getRepository(Product::class)->find($id);
-        
+
         if (!$product) {
             throw $this->createNotFoundException('El producto no existe');
         }

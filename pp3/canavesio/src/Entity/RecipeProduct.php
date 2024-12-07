@@ -2,8 +2,6 @@
 namespace App\Entity;
 
 use App\Repository\RecipeProductRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RecipeProductRepository::class)]
@@ -50,6 +48,24 @@ class RecipeProduct
     public function setParts(array $parts): self
     {
         $this->parts = $parts;
+
+        return $this;
+    }
+
+    // Método para agregar una parte
+    public function addPart(string $part): self
+    {
+        if (!in_array($part, $this->parts, true)) {
+            $this->parts[] = $part;
+        }
+
+        return $this;
+    }
+
+    // Método para eliminar una parte
+    public function removePart(string $part): self
+    {
+        $this->parts = array_filter($this->parts, fn($p) => $p !== $part);
 
         return $this;
     }

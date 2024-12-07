@@ -1,48 +1,89 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-<link href="{{ asset('styles/listaproductos.css') }}" rel="stylesheet">
+	{{ parent() }}
+	<link href="https://fonts.googleapis.com/css2?family=Krub:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="{{ asset('styles/listaproductos.css') }}" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %}{{ product.name }}{% endblock %}
+{% block title %}
+	{{ product.name }}
+{% endblock %}
 
 {% block body %}
-    <div class="producto-detalle-container">
-        <div class="producto-detalle">
-            <div class="producto-imagen-detalle">
-                {% if product.image %}
-                    <img src="data:image/jpeg;base64,{{ product.image }}" alt="{{ product.name }}">
-                {% endif %}
-            </div>
-            <div class="producto-info-detalle">
-                <h1>{{ product.name }}</h1>
-                <p class="precio">${{ product.price }}</p>
-                <p class="descripcion">{{ product.description }}</p>
-                
-                <div class="producto-acciones">
-                    <form action="{{ path('cart_add_product', {productId: product.id}) }}" method="post">
-                        <div class="cantidad-container">
-                            <label for="quantity">Cantidad:</label>
-                            <input type="number" id="quantity" name="quantity" min="1" max="{{ product.quantity }}" value="1" required>
-                        </div>
-                        <button type="submit" class="btn">Agregar al carrito</button>
-                    </form>
+	<div class="producto-detalle-container">
+		<div class="producto-detalle-grid">
+			{% if product.image %}
+				<div class="producto-detalle-imagen">
+					 <img src="data:image/jpeg;base64,{{ product.image }}" alt="{{ product.name }}">
+				</div>
+			{% endif %}
 
-                    <form action="{{ path('create-preference') }}" method="get">
-                        <button type="submit" class="btn">Ir al Pago</button>
-                    </form>
+			<div class="producto-detalle-info">
+				<h1 class="producto-detalle-titulo">{{ product.name }}</h1>
 
-                    {% if product.id not in favoriteProductIds %}
-    <form action="{{ path('add_favorite', {id: product.id}) }}" method="post">
-        <button type="submit" class="btn">Agregar a Favoritos</button>
-    </form>
-    <a class="button-volver" href="{{ path('product_list') }}"> Volver</a>
-{% else %}
-    
-    <button class="btn btn-warning" disabled>En Favoritos</button>
-{% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
+				<div class="producto-detalle-precio">
+					${{ product.price|number_format(2) }}
+				</div>
+
+				<div class="producto-detalle-descripcion">
+					{{ product.description }}
+				</div>
+
+				{% if product.specifications is defined and product.specifications|length > 0 %}
+					<div class="producto-especificaciones">
+						<h3>Especificaciones</h3>
+						<div class="especificaciones-lista">
+							{% for key, value in product.specifications %}
+								<div class="especificacion-item">
+									<span class="especificacion-label">{{ key }}</span>
+									<span class="especificacion-valor">{{ value }}</span>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				{% endif %}
+
+				<div class="producto-acciones">
+					<button class="btn-accion btn-carrito">
+						Agregar al Carrito
+					</button>
+					<button class="btn-accion btn-pago">
+						Ir al Pago
+					</button>
+				</div>
+
+				<div class="producto-favorito">
+					{% if product.id not in favoriteProductIds %}
+						<button class="btn-accion btn-favorito">
+							Agregar a Favoritos
+						</button>
+					{% else %}
+						<button class="btn-accion btn-favorito" disabled>
+							En Favoritos
+						</button>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+const addToCartButton = document.querySelector('.btn-carrito');
+const addToFavoriteButton = document.querySelector('.btn-favorito');
+
+addToCartButton.addEventListener('click', function () {
+console.log('Producto agregado al carrito');
+});
+
+if (addToFavoriteButton && ! addToFavoriteButton.disabled) {
+addToFavoriteButton.addEventListener('click', function () {
+console.log('Producto agregado a favoritos');
+});
+}
+});
+	</script>
 {% endblock %}

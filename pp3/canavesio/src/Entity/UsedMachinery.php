@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UsedMachineryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: UsedMachineryRepository::class)]
 class UsedMachinery
@@ -34,7 +35,13 @@ class UsedMachinery
     #[ORM\Column(nullable: true)]
     private ?float $price = null;
 
+    /**
+     * @Assert\NotBlank(message="La categoría es obligatoria")
+     */
     #[ORM\Column(length: 255)]
+    private ?string $category = null;
+
+    #[ORM\Column(nullable: true)]
     private ?string $imageFilename = null;
 
     public function getId(): ?int
@@ -116,6 +123,17 @@ class UsedMachinery
     public function setPrice(?float $price): self
     {
         $this->price = $price;
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
         return $this;
     }
 

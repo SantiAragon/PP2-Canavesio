@@ -1,66 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Add Used Machinery{% endblock %}
+{% block title %}
+  Add Used Machinery
+{% endblock %}
 
-{% block stylesheets %}<link href="{{ asset('styles/add_machinery.css') }}" rel="stylesheet">{% endblock %}
+{% block stylesheets %}
+  <link href="{{ asset('styles/add_machinery.css') }}" rel="stylesheet" />
+{% endblock %}
 
 {% block body %}
-<h1>Nueva Maquinaria Usada</h1>
+  <h1>Nueva Maquinaria Usada</h1>
 
-{# Mensajes Flash #}
-{% for label, messages in app.session.flashbag.all() %}
+  {# Mensajes Flash #}
+  {% for label, messages in app.session.flashbag.all() %}
     {% for message in messages %}
-        <div class="alert alert-{{ label }}">
-            {{ message }}
-        </div>
+      <div class="alert alert-{{ label }}">{{ message }}</div>
     {% endfor %}
-{% endfor %}
+  {% endfor %}
+  <div class="form-group-container">
+    {{ form_start(form) }}
+    <div class="form-group">{{ form_label(form.category) }}
+      {{ form_widget(form.category) }}
+      {{ form_errors(form.category) }}</div>
 
-<form method="post" action="{{ path('app_add_used_machinery') }}" enctype="multipart/form-data">
-    <div class="form-group-container">
-        <div class="form-group">
-            <label for="machinery_name">Nombre:</label>
-            <input type="text" id="machinery_name" name="machinery_name" required>
-        </div>
+    {{ form_row(form.machineryName) }}
+    {{ form_row(form.brand) }}
+    {{ form_row(form.yearsOld) }}
+    {{ form_row(form.months) }}
+    {{ form_row(form.hoursOfUse) }}
+    {{ form_row(form.lastService) }}
+    {{ form_row(form.price) }}
+    {{ form_row(form.imageFilename) }}
 
-        <div class="form-group">
-            <label for="brand">Marca:</label>
-            <input type="text" id="brand" name="brand" required>
-        </div>
-
-        <div class="form-group">
-            <label for="years_old">Años:</label>
-            <input type="number" id="years_old" name="years_old" required min="0">
-        </div>
-
-        <div class="form-group">
-            <label for="months">Meses:</label>
-            <input type="number" id="months" name="months" required min="0" max="11">
-        </div>
-
-        <div class="form-group">
-            <label for="hours_of_use">Horas de Uso:</label>
-            <input type="number" id="hours_of_use" name="hours_of_use" required min="0">
-        </div>
-
-        <div class="form-group">
-            <label for="last_service">Ultimo Servicio:</label>
-            <input type="date" id="last_service" name="last_service" required>
-        </div>
-
-        <div class="form-group">
-            <label for="price">Precio en USD:</label>
-            <input type="number" id="price" name="price" step="0.01" min="0">
-        </div>
-
-        <div class="form-group full-width">
-            <label for="image">Imagen:</label>
-            <input type="file" id="image" name="image" accept="image/*" required>
-        </div>
-
-        <div class="form-group full-width">
-            <button type="submit">Agregar</button>
-        </div>
+    <div class="form-group">
+      <button>Agregar</button>
+      <a href="{{ path('app_home_page') }}">Volver</a>
+      {{ form_end(form) }}
     </div>
-</form>
+  </div>
 {% endblock %}
