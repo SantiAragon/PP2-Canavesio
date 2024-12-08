@@ -1,0 +1,84 @@
+body {
+    background: url('../../assets/imagenes/4.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+    margin: 0; /* Elimina márgenes */
+    padding: 0; /* Elimina rellenos */
+    height: 100vh; /* Ocupa todo el viewport vertical */
+    overflow: hidden; /* Desactiva el scroll */
+}
+
+.container {
+    height: 100%; /* Asegúrate de que ocupe todo el espacio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-wrapper {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.form-wrapper h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #000000;
+    font-weight: bold;
+}
+.input-icon {
+    position: relative;
+}
+.input-icon i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+.form-control {
+    margin-bottom: 20px;
+    border-radius: 30px;
+    border: none;
+    padding: 12px 20px 12px 40px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 1rem;
+}
+.form-control::placeholder {
+    color: #ddd;
+}
+.btn-primary {
+    width: 100%;
+    background-color: #007bff;
+    border: none;
+    padding: 10px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #ddd;
+}
+.remember-forgot a {
+    color: #007bff;
+    text-decoration: none;
+}
+.remember-forgot a:hover {
+    text-decoration: underline;
+} 
