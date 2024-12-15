@@ -3,8 +3,20 @@
 
 {% block title %}Carrito de Compras{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/cart.css') }}">
+{% endblock %}
+
 {% block body %}
 <div class="container mt-4">
+            {% for label, messages in app.flashes %}
+                <div class="alert alert-{{ label }}">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                     {% endfor %}
+                </div>
+            {% endfor %}
     <h2 class="mb-4">Carrito de compras</h2>
 
     {% if cart and cart.cartProductOrders|length > 0 %}

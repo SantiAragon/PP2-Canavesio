@@ -2,15 +2,22 @@
 
 {% block title %}View Used Machineries{% endblock %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/viewUsedMachinery.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>Used Machineries</h1>
+<div class="machinery-container">
+    <h1 class="machinery-title">Used Machineries</h1>
 
 {% if usedMachineries is empty %}
-    <p>No used machineries found.</p>
+    <div class="no-machineries">
+        <p>No used machineries found.</p>
+    </div>
 {% endif %}
 
 {% if usedMachineries is not empty %}
-    <table>
+    <table class="machinery-table">
         <thead>
             <tr>
                 <th>Machinery Name</th>
@@ -29,22 +36,25 @@
                 <td>{{ machinery.machineryName }}</td>
                 <td>{{ machinery.brand }}</td>
                 <td>
-                    {{ machinery.yearsOld }} year{% if machinery.yearsOld != 1 %}s{% endif %}
+                    <span class="machinery-age {% if machinery.yearsOld < 2 %}machinery-age-new{% elseif machinery.yearsOld < 5 %}machinery-age-medium{% else %}machinery-age-old{% endif %}">
+                        {{ machinery.yearsOld }} year{% if machinery.yearsOld != 1 %}s{% endif %}
+                    </span>
                 </td>
                 <td>
                     {% if machinery.months > 0 %}
                         {{ machinery.months }} month{% if machinery.months != 1 %}s{% endif %}
                     {% else %}
-                         0 months
+                        0 months
                     {% endif %}
                 </td>
-</td>
                 <td>{{ machinery.hoursOfUse }}</td>
                 <td>{{ machinery.lastService|date('Y-m-d') }}</td>
                 <td>{{ machinery.price ? machinery.price|number_format(2, '.', ',') : 'N/A' }}</td>
                 <td>
                     {% if machinery.imageFilename %}
-                        <img src="{{ asset('images/' ~ machinery.imageFilename) }}" alt="{{ machinery.machineryName }}" width="100">
+                        <img src="{{ asset('images/' ~ machinery.imageFilename) }}" 
+                             alt="{{ machinery.machineryName }}" 
+                             class="machinery-image">
                     {% else %}
                         No image
                     {% endif %}

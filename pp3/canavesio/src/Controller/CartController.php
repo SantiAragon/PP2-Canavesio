@@ -12,7 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 class CartController extends AbstractController
 {
@@ -96,7 +98,6 @@ class CartController extends AbstractController
     #[Route('/cart/remove/{id}', name: 'cart_remove_product', methods: ['POST'])]
     public function removeProduct(
         int $id,
-        Request $request,
         EntityManagerInterface $entityManager,
         Security $security
     ): Response {
@@ -104,42 +105,34 @@ class CartController extends AbstractController
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-
+    
         $cartProductOrder = $entityManager->getRepository(CartProductOrder::class)->find($id);
-
+    
         if (!$cartProductOrder) {
             throw $this->createNotFoundException('Cart product order not found');
         }
-
+    
         $cart = $cartProductOrder->getCart();
         if ($cart->getUser() !== $user) {
             throw $this->createAccessDeniedException('You do not have permission to remove this item from the cart.');
         }
-
-        $quantityToRemove = (int) $request->request->get('quantity', 0);
-
-        if ($quantityToRemove > 0 && $quantityToRemove <= $cartProductOrder->getQuantity()) {
-            $currentQuantity = $cartProductOrder->getQuantity();
-            $newQuantity = $currentQuantity - $quantityToRemove;
-
-            if ($newQuantity > 0) {
-                $cartProductOrder->setQuantity($newQuantity);
-            } else {
-                // Remove CartProductOrder if quantity becomes 0 or less
-                $cart->removeCartProductOrder($cartProductOrder);
-                $entityManager->remove($cartProductOrder);
-            }
-
-            // Update the stock quantity of the product
-            $product = $cartProductOrder->getProduct();
-            if ($product) {
-                $product->setQuantity($product->getQuantity() + $quantityToRemove);
-                $entityManager->persist($product);
-            }
-
-            $entityManager->flush();
+    
+        // Eliminar completamente el producto del carrito
+        $cart->removeCartProductOrder($cartProductOrder);
+        $entityManager->remove($cartProductOrder);
+    
+        // Opcional: Devolver la cantidad al stock del producto
+        $product = $cartProductOrder->getProduct();
+        if ($product) {
+            $product->setQuantity($product->getQuantity() + $cartProductOrder->getQuantity());
+            $entityManager->persist($product);
         }
-
+    
+        $entityManager->flush();
+    
+        // Añadir un mensaje flash para confirmar la eliminación
+        $this->addFlash('success', 'Producto eliminado del carrito');
+    
         return $this->redirectToRoute('cart_view');
     }
 }

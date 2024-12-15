@@ -5,7 +5,10 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Entity\UserFavoriteProduct;
 use App\Form\ProductType;
+use App\Repository\ProductRepository;
 use App\Repository\UserFavoriteProductRepository;
+use App\Entity\Favorite;
+use Symfony\Bundle\SecurityBundle\Security;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,6 +76,7 @@ class ProductController extends AbstractController
     ): Response {
         $user = $this->getUser();
         $product = $entityManager->getRepository(Product::class)->find($id);
+        dump($product);
 
         if (!$product) {
             throw $this->createNotFoundException('El producto no existe');
@@ -94,42 +98,48 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/{id}/favorite', name: 'add_favorite', methods: ['POST'])]
-    public function addToFavorites(
+    public function addFavorite(
         int $id,
+        ProductRepository $productRepository,
+        UserFavoriteProductRepository $userFavoriteProductRepository,
         EntityManagerInterface $entityManager,
-        UserFavoriteProductRepository $userFavoriteProductRepository
+        Security $security
     ): Response {
-        $user = $this->getUser();
-
+        $user = $security->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
-        $product = $entityManager->getRepository(Product::class)->find($id);
-
+        $product = $productRepository->find($id);
         if (!$product) {
-            throw $this->createNotFoundException('El producto no existe');
+            return $this->redirectToRoute('product_list');
         }
 
-        // Verificar si ya está en favoritos
+        // Verificar si el producto ya está en favoritos
         $existingFavorite = $userFavoriteProductRepository->findOneBy([
             'user' => $user,
-            'product' => $product
+            'product' => $product,
         ]);
 
-        if (!$existingFavorite) {
-            $favorite = new UserFavoriteProduct();
-            $favorite->setUser($user);
-            $favorite->setProduct($product);
-
-            $entityManager->persist($favorite);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Producto agregado a favoritos');
+        if ($existingFavorite) {
+            $this->addFlash('warning', 'Este producto ya se encuentra en favoritos.');
+            return $this->redirectToRoute('product_list');
         }
 
-        // Redirigir de vuelta a la página de detalle
-        return $this->redirectToRoute('product_detail', ['id' => $id]);
+        $favorite = new Favorite();
+        $favorite->setFlag(true);
+
+        $userFavoriteProduct = new UserFavoriteProduct();
+        $userFavoriteProduct->setUser($user);
+        $userFavoriteProduct->setProduct($product);
+        $userFavoriteProduct->setFavorite($favorite);
+
+        $entityManager->persist($favorite);
+        $entityManager->persist($userFavoriteProduct);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Producto agregado a favoritos.');
+        return $this->redirectToRoute('product_list');
     }
 
     #[Route('/product/{id}/favorite/remove', name: 'remove_favorite', methods: ['POST'])]
