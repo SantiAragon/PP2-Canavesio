@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+ 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,11 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class RegistrationController extends AbstractController
 {
-    #[Route('/test', name:'test')]
-    public function main()
-    {
-        return $this->render(view:'base.html.twig');
-    }
+ 
 
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
@@ -27,9 +23,12 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
+            $user->setSecurityQuestion($form->get('securityQuestion')->getData());
+            $user->setSecurityAnswer($form->get('securityAnswer')->getData());
             // Obtener el email del usuario
             $email = $user->getEmail();
-    
+            dump($form->getErrors(true, false));
+            dump($form->get('plainPassword')->getData());
             // Lógica de asignación de roles basada en el email
             $roles = ['ROLE_USER']; // Rol por defecto
     
@@ -60,7 +59,7 @@ class RegistrationController extends AbstractController
         }
     
         return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
+            'registrationForm' => $form->createView(),
         ]);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-
+  
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -27,6 +27,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(max: 180, maxMessage: "El email no puede superar los 180 caracteres.")]
     private ?string $email = null;
 
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Assert\NotBlank(message: 'El nombre de usuario no puede estar vacío')]
+    #[Assert\Type(
+        type: 'string',
+        message: 'El nombre de usuario debe ser texto'
+    )]
+    /* #[Assert\Length(
+        min: 3,
+        max: 10,
+        minMessage: 'El nombre de usuario debe tener al menos {{ limit }} caracteres',
+        maxMessage: 'El nombre de usuario no puede tener más de {{ limit }} caracteres'
+    )] */
+    #[Assert\Regex(
+        pattern: '/^[a-zA-Z0-9]+$/',
+        message: 'El nombre de usuario solo puede contener letras y números'
+    )]
+    private ?string $username = null;
+
+    #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    private ?string $phone = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $securityQuestion = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $securityAnswer = null;
+
     /**
      * @var list<string> The user roles
      */
@@ -34,9 +61,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: "La contraseña no puede estar vacía.")]
     #[Assert\Length(max: 255, maxMessage: "La contraseña no puede superar los 255 caracteres.")]
     private ?string $password = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $resetToken = null;
 
     /**
      * @var Collection<int, Cart>
@@ -190,4 +219,64 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    // Getters y setters
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+    public function getSecurityQuestion(): ?string
+{
+    return $this->securityQuestion;
+}
+
+public function setSecurityQuestion(?string $securityQuestion): self
+{
+    $this->securityQuestion = $securityQuestion;
+
+    return $this;
+}
+
+public function getSecurityAnswer(): ?string
+{
+    return $this->securityAnswer;
+}
+
+public function setSecurityAnswer(?string $securityAnswer): self
+{
+    $this->securityAnswer = $securityAnswer;
+
+    return $this;
+}
 }

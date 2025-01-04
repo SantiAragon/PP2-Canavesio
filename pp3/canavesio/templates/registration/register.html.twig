@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}<link href="{{ asset('styles/register.css') }}" rel="stylesheet">{% endblock %}
 {% block title %}Register{% endblock %}
-
+ 
 {% block body %}
     
     <div class="register-container">
@@ -11,7 +11,7 @@
 
             {{ form_errors(registrationForm) }}
 
-            {{ form_start(registrationForm) }}
+            {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
                 <div class="register-field">
                     {{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'register-label'}}) }}
                     {{ form_widget(registrationForm.email, {
@@ -21,6 +21,27 @@
                         }
                     }) }}
                 </div>
+                <div class="register-field" >
+                    {{ form_label(registrationForm.username, 'Nombre de usuario', {'label_attr': {'class': 'register-label'}}) }}
+                    {{ form_widget(registrationForm.username, {
+                        'attr': {
+                            'class': 'register-input',
+                            'placeholder': 'Nombre de usuario'
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.username) }}
+                </div>
+
+                <div class="register-field">
+                    {{ form_label(registrationForm.phone, 'Teléfono', {'label_attr': {'class': 'register-label'}}) }}
+                    {{ form_widget(registrationForm.phone, {
+                        'attr': {
+                            'class': 'register-input',
+                            'placeholder': 'Teléfono (opcional)'
+                        }
+                    }) }}
+                </div>
+
                 
                 <div class="register-field">
                     {{ form_label(registrationForm.plainPassword, 'Contraseña', {'label_attr': {'class': 'register-label'}}) }}
@@ -28,6 +49,25 @@
                         'attr': {
                             'class': 'register-input',
                             'placeholder': 'Contraseña'
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.plainPassword) }}
+                </div>
+                <div class="register-field" >
+                    {{ form_label(registrationForm.securityQuestion, 'Pregunta clave', {'label_attr': {'class': 'register-label'}}) }}
+                    {{ form_widget(registrationForm.securityQuestion, {
+                        'attr': {
+                            'class': 'register-input'
+                        }
+                    }) }}
+                </div>
+
+                <div class="register-field">
+                    {{ form_label(registrationForm.securityAnswer, 'Respuesta', {'label_attr': {'class': 'register-label'}}) }}
+                    {{ form_widget(registrationForm.securityAnswer, {
+                        'attr': {
+                            'class': 'register-input',
+                            'placeholder': 'Escriba su respuesta'
                         }
                     }) }}
                 </div>
