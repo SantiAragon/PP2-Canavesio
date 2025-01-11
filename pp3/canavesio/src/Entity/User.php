@@ -1,5 +1,5 @@
 <?php
-
+  
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -9,10 +9,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Esta email ya tiene una cuenta creada')]
+#[UniqueEntity(fields: ['username'], message: 'El nombre de usuario ya está en uso.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -20,8 +23,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(message: 'El email no puede estar vacío')]
+    #[Assert\Email(message: "El email '{{ value }}' no es válido.")]
+    #[Assert\Length(
+    min: 11,
+    max: 255,
+    minMessage: 'El email debe tener al menos {{ limit }} caracteres',
+    maxMessage: 'El email no puede superar los {{ limit }} caracteres'
+)]
     private ?string $email = null;
+
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Assert\NotBlank(message: 'El nombre de usuario no puede estar vacío')]
+    #[Assert\Type(type: 'string', message: 'El nombre de usuario debe ser texto')]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-Z0-9]+$/',
+        message: 'El nombre de usuario solo puede contener letras y números'
+    )]
+    private ?string $username = null;
+
+    #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    private ?string $phone = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $securityQuestion = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $securityAnswer = null;
 
     /**
      * @var list<string> The user roles
@@ -29,11 +58,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
+    #[Assert\Length(max: 12, maxMessage: "La contraseña no puede superar los 255 caracteres.")]
     private ?string $password = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $resetToken = null;
 
     /**
      * @var Collection<int, Cart>
@@ -187,4 +217,64 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    // Getters y setters
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+    public function getSecurityQuestion(): ?string
+{
+    return $this->securityQuestion;
+}
+
+public function setSecurityQuestion(?string $securityQuestion): self
+{
+    $this->securityQuestion = $securityQuestion;
+
+    return $this;
+}
+
+public function getSecurityAnswer(): ?string
+{
+    return $this->securityAnswer;
+}
+
+public function setSecurityAnswer(?string $securityAnswer): self
+{
+    $this->securityAnswer = $securityAnswer;
+
+    return $this;
+}
 }

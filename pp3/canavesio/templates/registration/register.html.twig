@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}<link href="{{ asset('styles/register.css') }}" rel="stylesheet">{% endblock %}
 {% block title %}Register{% endblock %}
-
+ 
 {% block body %}
     
     <div class="register-container">
@@ -12,6 +12,8 @@
             {{ form_errors(registrationForm) }}
 
             {{ form_start(registrationForm) }}
+
+            {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
                 <div class="register-field">
                     {{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'register-label'}}) }}
                     {{ form_widget(registrationForm.email, {
@@ -20,7 +22,32 @@
                             'placeholder': 'Email'
                         }
                     }) }}
+
                 </div>
+
+                    {{ form_errors(registrationForm.email) }}
+                </div>
+                <div class="register-field" >
+                    {{ form_label(registrationForm.username, 'Nombre de usuario', {'label_attr': {'class': 'register-label'}}) }}
+                    {{ form_widget(registrationForm.username, {
+                        'attr': {
+                            'class': 'register-input',
+                            'placeholder': 'Nombre de usuario'
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.username) }}
+                </div>
+
+                <div class="register-field">
+                    {{ form_label(registrationForm.phone, 'Teléfono', {'label_attr': {'class': 'register-label'}}) }}
+                    {{ form_widget(registrationForm.phone, {
+                        'attr': {
+                            'class': 'register-input',
+                            'placeholder': 'Teléfono (opcional)'
+                        }
+                    }) }}
+                </div>
+
                 
                 <div class="register-field">
                     {{ form_label(registrationForm.plainPassword, 'Contraseña', {'label_attr': {'class': 'register-label'}}) }}
@@ -28,6 +55,26 @@
                         'attr': {
                             'class': 'register-input',
                             'placeholder': 'Contraseña'
+                        }
+                    }) }}
+
+                    {{ form_errors(registrationForm.plainPassword) }}
+                </div>
+                <div class="register-field" >
+                    {{ form_label(registrationForm.securityQuestion, 'Pregunta clave', {'label_attr': {'class': 'register-label'}}) }}
+                    {{ form_widget(registrationForm.securityQuestion, {
+                        'attr': {
+                            'class': 'register-input'
+                        }
+                    }) }}
+                </div>
+
+                <div class="register-field">
+                    {{ form_label(registrationForm.securityAnswer, 'Respuesta', {'label_attr': {'class': 'register-label'}}) }}
+                    {{ form_widget(registrationForm.securityAnswer, {
+                        'attr': {
+                            'class': 'register-input',
+                            'placeholder': 'Escriba su respuesta'
                         }
                     }) }}
                 </div>
@@ -59,6 +106,26 @@
         duration: 1000,
         once: true,
         easing: 'ease-out-cubic'
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordField = document.querySelector('[name="registration_form[plainPassword]"]');
+    const form = passwordField.closest('form');
+
+    form.addEventListener('submit', function(e) {
+        if (passwordField.value.length > 12) {
+            e.preventDefault();
+            alert('La contraseña no puede superar los 255 caracteres.');
+            passwordField.focus();
+        }
+    });
+
+    passwordField.addEventListener('input', function() {
+        if (this.value.length > 12) {
+            this.value = this.value.slice(0, 2);
+        }
     });
 });
 </script>
