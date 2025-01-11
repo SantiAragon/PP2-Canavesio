@@ -14,7 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Esta email ya tiene una cuenta creada')]
+#[UniqueEntity(fields: ['username'], message: 'El nombre de usuario ya está en uso.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,23 +23,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(message: 'El email no puede estar vacío')]
     #[Assert\Email(message: "El email '{{ value }}' no es válido.")]
-    #[Assert\Length(max: 180, maxMessage: "El email no puede superar los 180 caracteres.")]
+    #[Assert\Length(
+    min: 11,
+    max: 255,
+    minMessage: 'El email debe tener al menos {{ limit }} caracteres',
+    maxMessage: 'El email no puede superar los {{ limit }} caracteres'
+)]
     private ?string $email = null;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     #[Assert\NotBlank(message: 'El nombre de usuario no puede estar vacío')]
-    #[Assert\Type(
-        type: 'string',
-        message: 'El nombre de usuario debe ser texto'
-    )]
-    /* #[Assert\Length(
-        min: 3,
-        max: 10,
-        minMessage: 'El nombre de usuario debe tener al menos {{ limit }} caracteres',
-        maxMessage: 'El nombre de usuario no puede tener más de {{ limit }} caracteres'
-    )] */
+    #[Assert\Type(type: 'string', message: 'El nombre de usuario debe ser texto')]
     #[Assert\Regex(
         pattern: '/^[a-zA-Z0-9]+$/',
         message: 'El nombre de usuario solo puede contener letras y números'
@@ -61,7 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     #[ORM\Column]
-    #[Assert\Length(max: 255, maxMessage: "La contraseña no puede superar los 255 caracteres.")]
+    #[Assert\Length(max: 12, maxMessage: "La contraseña no puede superar los 255 caracteres.")]
     private ?string $password = null;
 
     #[ORM\Column(type: 'string', nullable: true)]

@@ -16,13 +16,38 @@ use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Validator\Constraints\Email;
 
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
+        ->add('email', null, [
+            'label' => 'Email',
+            'attr' => [
+                'placeholder' => 'Email',
+                'minlength' => '11',
+                'maxlength' => '255'
+            ],
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'Por favor, introduce un email',
+                ]),
+                new Email([
+                    'message' => 'El email "{{ value }}" no es válido.',
+                ]),
+                new Length([
+                    'min' => 11,
+                    'max' => 255,
+                    'minMessage' => 'El email debe tener al menos {{ limit }} caracteres',
+                    'maxMessage' => 'El email no puede superar los {{ limit }} caracteres',
+                ])
+            ]
+        ])
             ->add('username', TextType::class, [
                 'label' => 'Nombre de usuario',
                 'attr' => [
@@ -78,21 +103,29 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'mapped' => false,
-                
+                'attr' => [
+                    'maxlength' => '12',
+                    'class' => 'register-input',
+                    'placeholder' => 'Contraseña'
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Por favor, introduzca una contraseña',
                     ]),
                     new Length([
                         'min' => 6,
+                        'max' => 12,
                         'minMessage' => 'Su contraseña debe tener al menos {{ limit }} caracteres',
-                        
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
+                        'maxMessage' => 'La contraseña no puede superar los {{ limit }} caracteres',
+                        'normalizer' => 'trim'
                     ]), 
+                    new Callback(function($value, ExecutionContextInterface $context) {
+                        if (strlen($value) > 12) {
+                            $context->buildViolation('La contraseña no puede superar los 255 caracteres.')
+                                ->addViolation();
+                        }
+                    }),
                 ],
             ])
         ;

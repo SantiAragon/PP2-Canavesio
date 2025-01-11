@@ -20,6 +20,7 @@
                             'placeholder': 'Email'
                         }
                     }) }}
+                    {{ form_errors(registrationForm.email) }}
                 </div>
                 <div class="register-field" >
                     {{ form_label(registrationForm.username, 'Nombre de usuario', {'label_attr': {'class': 'register-label'}}) }}
@@ -99,6 +100,25 @@
         duration: 1000,
         once: true,
         easing: 'ease-out-cubic'
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordField = document.querySelector('[name="registration_form[plainPassword]"]');
+    const form = passwordField.closest('form');
+
+    form.addEventListener('submit', function(e) {
+        if (passwordField.value.length > 12) {
+            e.preventDefault();
+            alert('La contraseña no puede superar los 255 caracteres.');
+            passwordField.focus();
+        }
+    });
+
+    passwordField.addEventListener('input', function() {
+        if (this.value.length > 12) {
+            this.value = this.value.slice(0, 2);
+        }
     });
 });
 </script>

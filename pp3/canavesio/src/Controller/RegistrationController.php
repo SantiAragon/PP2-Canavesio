@@ -16,23 +16,29 @@ class RegistrationController extends AbstractController
  
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
-    {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
-    
-        if ($form->isSubmitted() && $form->isValid()) {
+public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+{
+    $user = new User();
+    $form = $this->createForm(RegistrationFormType::class, $user);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted()) {
+        $plainPassword = $form->get('plainPassword')->getData();
+        
+        // Validación estricta de la longitud
+        if (strlen($plainPassword) > 12) {
+            $form->get('plainPassword')->addError(new FormError('La contraseña no puede superar los 255 caracteres.'));
+        }
+
+        if ($form->isValid()) {
             $user->setSecurityQuestion($form->get('securityQuestion')->getData());
             $user->setSecurityAnswer($form->get('securityAnswer')->getData());
+            
             // Obtener el email del usuario
             $email = $user->getEmail();
-            dump($form->getErrors(true, false));
-            dump($form->get('plainPassword')->getData());
-            // Lógica de asignación de roles basada en el email
-            $roles = ['ROLE_USER']; // Rol por defecto
-    
-            // Ejemplos de asignación de roles
+            
+            // Lógica de asignación de roles
+            $roles = ['ROLE_USER'];
             if (strpos($email, 'santiagoaragonadmin@gmail.com') !== false) {
                 $roles = ['ROLE_ADMIN'];
             } elseif (strpos($email, 'santiagoaragonstock@gmail.com') !== false) {
@@ -40,26 +46,25 @@ class RegistrationController extends AbstractController
             } elseif (strpos($email, 'santiagoaragonventas@gmail.com') !== false) {
                 $roles = ['ROLE_VENDEDOR'];
             }
-    
-            // Asignar los roles al usuario
+            
             $user->setRoles($roles);
-    
-            // Codificar contraseña
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-    
-            $entityManager->persist($user);
-            $entityManager->flush();
-    
-            return $this->redirectToRoute('app_login');
+            
+            // Codificar la contraseña
+            $hashedPassword = $userPasswordHasher->hashPassword($user, $plainPassword);
+            $user->setPassword($hashedPassword);
+
+            try {
+                $entityManager->persist($user);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_login');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Ha ocurrido un error al registrar el usuario.');
+            }
         }
-    
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
     }
+
+    return $this->render('registration/register.html.twig', [
+        'registrationForm' => $form->createView(),
+    ]);
+}
 }
